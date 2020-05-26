@@ -14,6 +14,7 @@ function check_coverage ()
         echo "Creating coverage for [$pkg]"
         ws=~/target_ws
         extend="/opt/ros/$ROS_DISTRO"
+        ici_exec_in_workspace "$extend" "$ws" catkin build $pkg -v --no-deps --catkin-make-args tests
         ici_exec_in_workspace "$extend" "$ws" catkin build $pkg -v --no-deps --catkin-make-args ${pkg}_coverage
 
         if [ -a $ws/build/$pkg/${pkg}_coverage.info.cleaned ]; then
