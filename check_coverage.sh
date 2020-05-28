@@ -5,17 +5,18 @@ function check_coverage ()
 {
     source "${ICI_SRC_PATH}/workspace.sh"
     source "${ICI_SRC_PATH}/util.sh"
+    source "${ICI_SRC_PATH}/env.sh"
 
     echo "Checking coverage for [$*]"
 
     coverage_pass=true
 
     for pkg in "$@"; do
-        echo "Creating coverage for [$pkg]"
+        echo "Creating coverage for [$pkg] (using $ROS_PARALLEL_TEST_JOBS)"
         ws=~/target_ws
         extend="/opt/ros/$ROS_DISTRO"
         ici_exec_in_workspace "$extend" "$ws" catkin build $pkg -v --no-deps --catkin-make-args tests
-        ici_exec_in_workspace "$extend" "$ws" catkin build $pkg -v -j 1 --no-deps --catkin-make-args ${pkg}_coverage
+        ici_exec_in_workspace "$extend" "$ws" catkin build $pkg -v $ROS_PARALLEL_TEST_JOBS --no-deps --catkin-make-args ${pkg}_coverage
 
         if [ -a $ws/build/$pkg/${pkg}_coverage.info.cleaned ]; then
             echo "Coverage summary for $pkg ----------------------"
